@@ -34,6 +34,31 @@ void randInit(board_t board);
  */
 void setScore(board_t board, char score, size_t row, size_t col);
 
+//==========================<Note Handling>===========================//
+/**
+ * Returns the bitfield of the notes in the particular cell. Any LSB 
+ * bits 0-3 that have been set indicate the card is marked for those 
+ * values.
+ */
+char getNotes(board_t board, size_t row, size_t col);
+
+/**
+ * Sets the note for score 'val' on the specified card
+ */
+void addNote(board_t board, char val, size_t row, size_t col);
+
+//==========================<Flip Controls>===========================//
+/**
+ * Invert the flipped state of this card
+ */
+void flipCard(board_t board, size_t row, size_t col);
+
+/**
+ * Returns true if this card is turned up
+ */
+bool isFlipped(board_t board, size_t row, size_t col);
+
+
 //===========================<State Query>============================//
 /**
  * Returns the score of the specified cell

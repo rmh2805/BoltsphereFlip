@@ -1,15 +1,19 @@
 #include "board.h"
 
+//#include <stdio.h>
+
 #define kDefBoardWidth 5
 #define kDefBoardHeight 5
 
 #define kMaxScore 4
 
-#define kFlagNote0 0x1
-#define kFlagNote1 0x2
-#define kFlagNote2 0x4
-#define kFlagNote3 0x8
+#define kFlagNote0 0x01
+#define kFlagNote1 0x02
+#define kFlagNote2 0x04
+#define kFlagNote3 0x08
 #define kFlagFlipped 0x10
+
+#define kAllScoreFlags 0x0F
 #define kAllFlags 0x1F
 
 #define kScoreOffset 5
@@ -97,6 +101,70 @@ void randInit(board_t board) {
 void setScore(board_t board, char score, size_t row, size_t col) {
     board->data[row][col] = (board->data[row][col] & kAllFlags) 
                             + ((score%kMaxScore) << kScoreOffset);
+}
+
+//==========================<Note Handling>===========================//
+/**
+ * Returns the bitfield of the notes in the particular cell. Any LSB 
+ * bits 0-3 that have been set indicate the card is marked for those 
+ * values.
+ */
+char getNotes(board_t board, size_t row, size_t col) {
+    if(board == NULL || row >= board->nRows || col >= board->nCols) {
+        return 0;
+    }
+    
+    return board->data[row][col] & kAllScoreFlags;
+}
+
+/**
+ * Sets the note for score 'val' on the specified card
+ */
+void addNote(board_t board, char val, size_t row, size_t col) {
+    if(board == NULL || val < 0 || val >= kMaxScore || 
+            row >= board->nRows || col >= board->nCols) {
+        return;
+    }
+    
+    char flag = 0;
+    switch(val){    // Grab the flag to toggle
+        case 0:
+            flag = kFlagNote0;
+            break;
+        case 1:
+            flag = kFlagNote1;
+            break;
+        case 2:
+            flag = kFlagNote2;
+            break;
+        case 3:
+            flag = kFlagNote3;
+            break;
+    }
+    
+    board->data[row][col] = board->data[row][col] ^ flag;
+}
+
+//==========================<Flip Controls>===========================//
+/**
+ * Invert the flipped state of this card
+ */
+void flipCard(board_t board, size_t row, size_t col) {
+    if(board == NULL || row >= board->nRows || col >= board->nCols)
+        return;
+    
+    board->data[row][col] = board->data[row][col] ^ kFlagFlipped;
+}
+
+/**
+ * Returns true if this card is turned up
+ */
+bool isFlipped(board_t board, size_t row, size_t col) {
+    if(board == NULL || row >= board->nRows || col >= board->nCols)
+        return false;
+    
+    return (board->data[row][col] & kFlagFlipped) ? true : false;
+    
 }
 
 //===========================<State Query>============================//

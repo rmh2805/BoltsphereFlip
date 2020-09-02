@@ -14,6 +14,26 @@ void printBoard(board_t board) {
     }
 }
 
+void printNotes(board_t board) {
+    printf("\n");
+    for(size_t row = 0; row < getNRows(board); row++) {
+        for(size_t col = 0; col < getNCols(board); col++) {
+            printf("%d ", getNotes(board, row, col));
+        }
+        printf("\n");
+    }
+}
+
+void printFlipped(board_t board) {
+    printf("\n");
+    for(size_t row = 0; row < getNRows(board); row++) {
+        for(size_t col = 0; col < getNCols(board); col++) {
+            printf("%c ", isFlipped(board, row, col)?'t':'f');
+        }
+        printf("\n");
+    }
+}
+
 int main() {
     //Initialize the random number generator for board population
     unsigned int mySeed = (unsigned int) time(NULL);
@@ -29,15 +49,15 @@ int main() {
     //Do stuff here
     randInit(board);
     
-    printBoard(board);
+    printFlipped(board);
     
     for(size_t row = 0; row < getNRows(board); row++) {
         for(size_t col = 0; col < getNCols(board); col++) {
-            setScore(board, 3, row, col);
+            flipCard(board, row, col);
         }
     }
     
-    printBoard(board);
+    printFlipped(board);
     
     //Delete the board and exit successfully
     delBoard(board);
