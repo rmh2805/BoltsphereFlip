@@ -46,9 +46,12 @@ testBoard: testBoard.o board.o
 #
 #				Misc Commands
 #
+
+.PHONY: clean realclean
+
 clean:
 	-rm *.o
 
 realclean: clean
-	
+	-rm testBoard
  
