@@ -5,6 +5,8 @@
 #include "printDisp.h"
 #include "board.h"
 
+#define kBufSize 64
+
 int main() {
     //Initialize the random number generator for board population
     unsigned int mySeed = (unsigned int) time(NULL);
@@ -13,7 +15,15 @@ int main() {
     //Allocate the board, exit on failure
     board_t board = makeBoardDef();
     if(board == NULL) {
-        fprintf(stderr, "Failed to allocate the board, exit failure");
+        fprintf(stderr, "Failed to allocate the board, exit failure\n");
+        return EXIT_FAILURE;
+    }
+    
+    //Allocate the input buffer
+    char* buf = calloc(kBufSize, sizeof(char));
+    if(buf == NULL) {
+        delBoard(board);
+        fprintf(stderr, "Failed to allocate the buffer, exit failure\n");
         return EXIT_FAILURE;
     }
     
@@ -22,8 +32,9 @@ int main() {
     //Main Loop here
     
     
-    //Delete the board and exit successfully
+    //Free all heap memory and exit successfully
     delBoard(board);
+    free(buf);
     return EXIT_SUCCESS;
 }
 
