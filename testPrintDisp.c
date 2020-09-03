@@ -23,25 +23,7 @@ int main() {
     
     for(size_t row = 0; row < getNRows(board); row++) {
         for (size_t col = 0; col < getNCols(board); col++) {
-            if(row == col) {
-                flipCard(board, row, col);
-            } else {
-                if(row%2 == 0) {
-                    addNote(board, 0, row, col);
-                } 
-                
-                if (col%2 == 0) {
-                    addNote(board, 1, row, col);
-                }
-                
-                if((row+col)%2==0) {
-                    addNote(board, 2, row, col);
-                }
-                
-                if(col > row) {
-                    addNote(board, 3, row, col);
-                }
-            }
+            flipCard(board, row, col);
         }
     } 
     
