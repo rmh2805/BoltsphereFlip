@@ -21,13 +21,13 @@ CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb
 #
 #	Main Target
 #
-main: testPrintDisp
+main: game
 
 #
 #	Multiple Targets
 #
 
-all: testBoard testPrintDisp
+all: testBoard testPrintDisp game
 
 #
 #	Executables
@@ -41,6 +41,9 @@ testPrintDisp: testPrintDisp.o board.o printDisp.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
 	$(ECHO)
 
+game: game.o board.o printDisp.o
+	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
+	$(ECHO)
 
 #
 #				Object Files
@@ -60,4 +63,5 @@ clean:
 realclean: clean
 	-rm testBoard
 	-rm testPrintDisp
+	-rm game
  
