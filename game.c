@@ -46,7 +46,7 @@ int main() {
     
     //Main Loop here
     
-    while(score > 0 && reqiredTiles > 0) {
+    while(score > 0 && requiredTiles > 0) {
         
     }
     
