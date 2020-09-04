@@ -176,8 +176,9 @@ void printDispBoard(board_t board) {
     
 }
 
-void printDispHelp(char help, char note, char flip) {
-    printf("%c: print this menu\n", help);
+void printDispHelp(char help, char note, char flip, char quit) {
+    printf("%c: Print this menu\n", help);
+    printf("%c: Quit the game\n", quit);
     printf("%c[col][row][value(s)]: Mark the specified card with the specified values (0-3)\n", note);
     printf("%c[col][row]: Flip the specified card\n", flip);
     fgetc(stdin);

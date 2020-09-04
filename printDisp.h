@@ -24,7 +24,7 @@ void printDispBoard(board_t board);
 /**
  * Prints a help message and then halts for input
  */
-void printDispHelp(char help, char note, char flip);
+void printDispHelp(char help, char note, char flip, char quit);
 
 /**
  * Prints a status indicator 

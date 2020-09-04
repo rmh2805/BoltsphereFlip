@@ -11,12 +11,13 @@
 #define kHelpChar '?'
 #define kNoteChar '#'
 #define kFlipChar '!'
+#define kQuitChar '~'
 
 typedef struct dispFunc_s {
     int (* InitDisp)();
     void (*CloseDisp)();
 
-    void (* DispHelp)(char help, char note, char flip);
+    void (* DispHelp)(char help, char note, char flip, char quit);
     void (* DispStatus)(size_t score, size_t nRemain, const char * msg);
     void (* DispBoard)(board_t board);
 
@@ -75,15 +76,36 @@ int main() {
     }
     
     //========================================<Main Code>=========================================//
-    dispFunc.DispHelp(kHelpChar, kNoteChar, kFlipChar);
-
+    //=======================================<Pre-Game>=======================================//
+    // Display the help screen before the game begins
+    dispFunc.DispHelp(kHelpChar, kNoteChar, kFlipChar, kQuitChar);
+    
+    // Display the board and status the first time around before grabbing any commands 
+    dispFunc.DispStatus(score, requiredTiles, "Welcome to boltsphere flip!");
+    dispFunc.DispBoard(board);
+    
+    //====================================<Main Game Loop>====================================//
     while(score > 0 && requiredTiles > 0) { //Repeat until flipped a 0 or all required tiles
-        dispFunc.DispStatus(score, requiredTiles, "Welcome to boltsphere flip!");
-        dispFunc.DispBoard(board);
         dispFunc.GetCmd(buf, kBufSize);
-        break; //Just for now
+        switch(buf[0]){
+            case kHelpChar:
+                dispFunc.DispStatus(score, requiredTiles, "");
+                dispFunc.DispHelp(kHelpChar, kNoteChar, kFlipChar, kQuitChar);
+
+                dispFunc.DispStatus(score, requiredTiles, "Printed Help");
+                dispFunc.DispBoard(board);
+                break;
+            case kQuitChar:
+                score = 0;
+                break;
+            default:
+                dispFunc.DispStatus(score, requiredTiles, "Illegal command");
+                dispFunc.DispBoard(board);
+                break;
+        }
     }
 
+    //======================================<Post-Game>=======================================//
     revealBoard(board);
     dispFunc.DispStatus(score, requiredTiles, "GAME OVER");
     dispFunc.DispBoard(board);
