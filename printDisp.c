@@ -173,10 +173,10 @@ void printDispBoard(board_t board) {
 }
 
 void printDispHelp(char help, char note, char flip) {
-    printf("\n\tWelcome to Boltsphere Flip\n");
     printf("%c: print this menu\n", help);
     printf("%c[col][row][value(s)]: Mark the specified card with the specified values (0-3)\n", note);
-    printf("%c[col][row]: Flip the specified card", flip);
+    printf("%c[col][row]: Flip the specified card\n", flip);
+    fgetc(stdin);
 }
 
 void printDispStatus(size_t score, size_t nRemain, const char * msg) {

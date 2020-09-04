@@ -1,4 +1,5 @@
 #include <stdlib.h> 
+#include <stdbool.h>
 #include <stdio.h>  //printf(), fprintf()
 #include <time.h>   //time()
 
@@ -7,19 +8,29 @@
 
 #define kBufSize 64
 
+#define kHelpChar '?'
+#define kNoteChar '#'
+#define kFlipChar '!'
+
+typedef struct dispFunc_s {
+    int (* InitDisp)();
+
+    void (* DispHelp)(char help, char note, char flip);
+    void (* DispStatus)(size_t score, size_t nRemain, const char * msg);
+    void (* DispBoard)(board_t board);
+
+    void (* GetCmd)(char * buf, size_t bufSize);
+} DispFunc;
+
 int main() {
-    //Initialize the random number generator for board population
-    unsigned int mySeed = (unsigned int) time(NULL);
-    srand(mySeed);
-    
-    //Allocate the board, exit on failure
+    //======================================<Initialization>======================================//
+    //===================================<Heap Allocation>====================================//
     board_t board = makeBoardDef();
     if(board == NULL) {
         fprintf(stderr, "Failed to allocate the board, exit failure\n");
         return EXIT_FAILURE;
     }
     
-    //Allocate the input buffer
     char* buf = calloc(kBufSize, sizeof(char));
     if(buf == NULL) {
         delBoard(board);
@@ -27,12 +38,16 @@ int main() {
         return EXIT_FAILURE;
     }
     
-    randInit(board);    // Initialize scores
+    //====================================<Initialization>====================================//
+    srand((unsigned int) time(NULL)); //Initialize RNG
+    randInit(board); // Randomly populate the board with scores
     
-    //Grab the dimensions once
+    //Grab the board dimensions once
     size_t nRows = getNRows(board);
     size_t nCols = getNCols(board);
     
+    size_t score = 1;   // Variable to track the score
+
     //Count the number of required tiles (score greater than 1)
     size_t requiredTiles = 0;
     for(size_t row = 0; row < nRows; row++) {
@@ -41,16 +56,25 @@ int main() {
         }
     }
     
+    // Set the display functions (here's where swapping will occur)
+    DispFunc dispFunc;
+    dispFunc.InitDisp = printDispInit;
+    dispFunc.DispHelp = printDispHelp;
+    dispFunc.DispStatus = printDispStatus;
+    dispFunc.DispBoard = printDispBoard;
+    dispFunc.GetCmd = printGetCmd;
     
-    long score = 1;   // Variable to track the score
-    
-    //Main Loop here
-    
-    while(score > 0 && requiredTiles > 0) {
-        
+    //========================================<Main Code>=========================================//
+    dispFunc.DispHelp(kHelpChar, kNoteChar, kFlipChar);
+
+    while(score > 0 && requiredTiles > 0) { //Repeat until flipped a 0 or all required tiles
+        dispFunc.DispStatus(score, requiredTiles, "Welcome to boltsphere flip!");
+        dispFunc.DispBoard(board);
+        dispFunc.GetCmd(buf, kBufSize);
+        break; //Just for now
     }
-    
-    //Free all heap memory and exit successfully
+
+    //=========================================<Cleanup>==========================================//
     delBoard(board);
     free(buf);
     return EXIT_SUCCESS;
