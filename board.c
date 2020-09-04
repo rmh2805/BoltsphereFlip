@@ -170,7 +170,7 @@ bool isFlipped(board_t board, size_t row, size_t col) {
 //===========================<State Query>============================//
 int getScore(board_t board, size_t row, size_t col) {
     if(board == NULL || row >= board->nRows || col >= board->nCols) {
-        return -1;
+        return 0;
     }
     return board->data[row][col]>>kScoreOffset;
     
