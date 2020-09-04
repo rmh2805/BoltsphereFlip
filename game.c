@@ -14,6 +14,7 @@
 
 typedef struct dispFunc_s {
     int (* InitDisp)();
+    void (*CloseDisp)();
 
     void (* DispHelp)(char help, char note, char flip);
     void (* DispStatus)(size_t score, size_t nRemain, const char * msg);
@@ -37,7 +38,7 @@ int main() {
         fprintf(stderr, "Failed to allocate the buffer, exit failure\n");
         return EXIT_FAILURE;
     }
-    
+
     //====================================<Initialization>====================================//
     srand((unsigned int) time(NULL)); //Initialize RNG
     randInit(board); // Randomly populate the board with scores
@@ -59,10 +60,18 @@ int main() {
     // Set the display functions (here's where swapping will occur)
     DispFunc dispFunc;
     dispFunc.InitDisp = printDispInit;
+    dispFunc.CloseDisp = printDispClose;
     dispFunc.DispHelp = printDispHelp;
     dispFunc.DispStatus = printDispStatus;
     dispFunc.DispBoard = printDispBoard;
     dispFunc.GetCmd = printGetCmd;
+
+    if(dispFunc.InitDisp() != EXIT_SUCCESS) {
+        delBoard(board);
+        free(buf);
+        fprintf(stderr, "Failed to initialize the display, exit failure\n");
+        return EXIT_FAILURE;
+    }
     
     //========================================<Main Code>=========================================//
     dispFunc.DispHelp(kHelpChar, kNoteChar, kFlipChar);

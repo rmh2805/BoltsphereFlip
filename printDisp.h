@@ -12,6 +12,11 @@
 int printDispInit();
 
 /**
+ * Provided for parity with other display code
+ */
+void printDispClose();
+
+/**
  * Prints the board to stdout
  */
 void printDispBoard(board_t board);

@@ -25,6 +25,10 @@ int printDispInit() {
     return EXIT_SUCCESS;
 }
 
+void printDispClose() {
+    
+} 
+
 void printDispRow(board_t board, size_t row) {
     int totScore = 0;
     int totBombs = 0;
