@@ -27,10 +27,28 @@ int main() {
         return EXIT_FAILURE;
     }
     
-    randInit(board);
+    randInit(board);    // Initialize scores
+    
+    //Grab the dimensions once
+    size_t nRows = getNRows(board);
+    size_t nCols = getNCols(board);
+    
+    //Count the number of required tiles (score greater than 1)
+    size_t requiredTiles = 0;
+    for(size_t row = 0; row < nRows; row++) {
+        for(size_t col = 0; col < nCols; col++) {
+            requiredTiles += (getScore(board, row, col) > 1) ? 0 : 1;
+        }
+    }
+    
+    
+    long score = 1;   // Variable to track the score
     
     //Main Loop here
     
+    while(score > 0 && reqiredTiles > 0) {
+        
+    }
     
     //Free all heap memory and exit successfully
     delBoard(board);
