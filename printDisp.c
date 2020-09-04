@@ -21,7 +21,11 @@
 #define kRIndicator "|%2d"
 #define kRBlank "|  "
 
-void printRow(board_t board, size_t row) {
+int printDispInit() {
+    return EXIT_SUCCESS;
+}
+
+void printDispRow(board_t board, size_t row) {
     int totScore = 0;
     int totBombs = 0;
     
@@ -106,7 +110,7 @@ void printRow(board_t board, size_t row) {
     
 }
 
-void printBoard(board_t board) {
+void printDispBoard(board_t board) {
     if(board == NULL)
         return;
     
@@ -126,7 +130,7 @@ void printBoard(board_t board) {
     
     
     for(size_t row = 0; row < getNRows(board); row++) {
-        printRow(board, row);
+        printDispRow(board, row);
     }    
     
     printf(kIndent);
@@ -168,3 +172,22 @@ void printBoard(board_t board) {
     
 }
 
+void printDispHelp(char help, char note, char flip) {
+    printf("\n\tWelcome to Boltsphere Flip\n");
+    printf("%c: print this menu\n", help);
+    printf("%c[col][row][value(s)]: Mark the specified card with the specified values (0-3)\n", note);
+    printf("%c[col][row]: Flip the specified card", flip);
+}
+
+void printDispStatus(size_t score, size_t nRemain, const char * msg) {
+    printf("===================================================================\n");
+    printf("Score: %lu\n", score);
+    printf("Remaining Required Cards: %lu\n", nRemain);
+    printf("%s\n", msg);
+    printf("\n");
+}
+
+void printGetCmd(char * buf, size_t bufSize) {
+    printf("\nEnter your command: ");
+    fgets(buf, bufSize, stdin);
+}
