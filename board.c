@@ -156,6 +156,17 @@ void flipCard(board_t board, size_t row, size_t col) {
     board->data[row][col] = board->data[row][col] ^ kFlagFlipped;
 }
 
+void revealBoard(board_t board) {
+    if(board == NULL)
+        return;
+    
+    for(size_t row = 0; row < board->nRows; row++) {
+        for(size_t col = 0; col < board->nCols; col++) {
+            board->data[row][col] = board->data[row][col] | kFlagFlipped; //Set the flipped flag on each
+        }
+    }
+}
+
 /**
  * Returns true if this card is turned up
  */

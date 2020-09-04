@@ -26,7 +26,7 @@ int printDispInit() {
 }
 
 void printDispClose() {
-    
+
 } 
 
 void printDispRow(board_t board, size_t row) {
@@ -184,7 +184,7 @@ void printDispHelp(char help, char note, char flip) {
 }
 
 void printDispStatus(size_t score, size_t nRemain, const char * msg) {
-    printf("===================================================================\n");
+    printf("\n===================================================================\n");
     printf("Score: %lu\n", score);
     printf("Remaining Required Cards: %lu\n", nRemain);
     printf("%s\n", msg);

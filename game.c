@@ -84,6 +84,10 @@ int main() {
         break; //Just for now
     }
 
+    revealBoard(board);
+    dispFunc.DispStatus(score, requiredTiles, "GAME OVER");
+    dispFunc.DispBoard(board);
+
     //=========================================<Cleanup>==========================================//
     dispFunc.CloseDisp();
     delBoard(board);
