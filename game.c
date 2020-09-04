@@ -66,6 +66,7 @@ int main() {
     dispFunc.DispBoard = printDispBoard;
     dispFunc.GetCmd = printGetCmd;
 
+    //Try to initialize the display, exit on failure
     if(dispFunc.InitDisp() != EXIT_SUCCESS) {
         delBoard(board);
         free(buf);
@@ -84,6 +85,7 @@ int main() {
     }
 
     //=========================================<Cleanup>==========================================//
+    dispFunc.CloseDisp();
     delBoard(board);
     free(buf);
     return EXIT_SUCCESS;
