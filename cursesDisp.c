@@ -29,7 +29,7 @@ size_t getCardCol(size_t col, size_t nCols) {
 /**
  *  Converts the card row into the screen row
  */
-size_t getCardCol(size_t row, size_t nRows) {
+size_t getCardRow(size_t row, size_t nRows) {
     if(screenHeight == 0) //Ensure initialization
         return 0;
 
