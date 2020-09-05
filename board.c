@@ -153,7 +153,7 @@ void flipCard(board_t board, size_t row, size_t col) {
     if(board == NULL || row >= board->nRows || col >= board->nCols)
         return;
     
-    board->data[row][col] = board->data[row][col] ^ kFlagFlipped;
+    board->data[row][col] = board->data[row][col] | kFlagFlipped;
 }
 
 void revealBoard(board_t board) {
