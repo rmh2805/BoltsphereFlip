@@ -153,7 +153,18 @@ void flipCard(board_t board, size_t row, size_t col) {
     if(board == NULL || row >= board->nRows || col >= board->nCols)
         return;
     
-    board->data[row][col] = board->data[row][col] ^ kFlagFlipped;
+    board->data[row][col] = board->data[row][col] | kFlagFlipped;
+}
+
+void revealBoard(board_t board) {
+    if(board == NULL)
+        return;
+    
+    for(size_t row = 0; row < board->nRows; row++) {
+        for(size_t col = 0; col < board->nCols; col++) {
+            board->data[row][col] = board->data[row][col] | kFlagFlipped; //Set the flipped flag on each
+        }
+    }
 }
 
 /**
@@ -170,7 +181,7 @@ bool isFlipped(board_t board, size_t row, size_t col) {
 //===========================<State Query>============================//
 int getScore(board_t board, size_t row, size_t col) {
     if(board == NULL || row >= board->nRows || col >= board->nCols) {
-        return -1;
+        return 0;
     }
     return board->data[row][col]>>kScoreOffset;
     

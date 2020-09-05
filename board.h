@@ -54,6 +54,11 @@ void addNote(board_t board, char val, size_t row, size_t col);
 void flipCard(board_t board, size_t row, size_t col);
 
 /**
+ * Reveal every card on the board
+ */
+void revealBoard(board_t board);
+
+/**
  * Returns true if this card is turned up
  */
 bool isFlipped(board_t board, size_t row, size_t col);

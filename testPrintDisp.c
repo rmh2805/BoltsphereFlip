@@ -27,7 +27,7 @@ int main() {
         }
     } 
     
-    printBoard(board);
+    printDispBoard(board);
     
     
     //Delete the board and exit successfully

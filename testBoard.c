@@ -4,7 +4,7 @@
 
 #include "board.h"
 
-void printBoard(board_t board) {
+void printDispBoard(board_t board) {
     printf("\n");
     for(size_t row = 0; row < getNRows(board); row++) {
         for(size_t col = 0; col < getNCols(board); col++) {
