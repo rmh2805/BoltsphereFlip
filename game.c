@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>  //printf(), fprintf()
 #include <time.h>   //time()
+#include <string.h>
 
 #include "printDisp.h"
 #include "board.h"
@@ -93,16 +94,45 @@ int main() {
                 dispFunc.DispHelp(kHelpChar, kNoteChar, kFlipChar, kQuitChar);
 
                 dispFunc.DispStatus(score, requiredTiles, "Printed Help");
-                dispFunc.DispBoard(board);
                 break;
             case kQuitChar:
                 score = 0;
                 break;
+            case kNoteChar:
+            case kFlipChar: ; //semicolon here because screw C
+                char colChar = buf[1];
+                char rowChar = buf[2];
+                
+                size_t row = 0;
+                size_t col = 0;
+                if(colChar >= 'a' && colChar <= 'z' && colChar - 'a' < nCols) {
+                    col = colChar - 'a';
+                } else if (colChar >= 'A' && colChar <= 'Z' && colChar - 'A' < nCols) {
+                    col = colChar - 'A';
+                } else {
+                    dispFunc.DispStatus(score, requiredTiles, "Illegal column");
+                }
+
+                if(rowChar >= '1' && rowChar - '1' < nRows) {
+                    row = rowChar - '1';
+                } else {
+                    dispFunc.DispStatus(score, requiredTiles, "Illegal row");
+                }
+
+                if(buf[0] == kFlipChar) {
+                    flipCard(board, row, col);
+                    score *= getScore(board, row, col);
+                    if(score == 0)
+                        break;
+                }
+
+                break;
             default:
                 dispFunc.DispStatus(score, requiredTiles, "Illegal command");
-                dispFunc.DispBoard(board);
                 break;
         }
+        
+        dispFunc.DispBoard(board);
     }
 
     //======================================<Post-Game>=======================================//
