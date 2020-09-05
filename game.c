@@ -124,6 +124,16 @@ int main() {
                     score *= getScore(board, row, col);
                     if(score == 0)
                         break;
+                    dispFunc.DispStatus(score, requiredTiles, buf);
+                } else {
+                    if(buf[3] < '0' || buf[3] > '3') {
+                        dispFunc.DispStatus(score, requiredTiles, "You must specify a list of notes to toggle");
+                    } else {
+                        for(size_t i = 3; buf[i] >= '0' && buf[i] <= '3'; i++) { //Flip each listed flag it's listed
+                            addNote(board, buf[i] - '0', row, col);
+                        }
+                        dispFunc.DispStatus(score, requiredTiles, buf);
+                    }
                 }
 
                 break;
