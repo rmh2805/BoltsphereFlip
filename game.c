@@ -55,7 +55,7 @@ int main() {
     size_t requiredTiles = 0;
     for(size_t row = 0; row < nRows; row++) {
         for(size_t col = 0; col < nCols; col++) {
-            requiredTiles += (getScore(board, row, col) > 1) ? 0 : 1;
+            requiredTiles += (getScore(board, row, col) > 1) ? 1 : 0;
         }
     }
     
