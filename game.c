@@ -111,19 +111,26 @@ int main() {
                     col = colChar - 'A';
                 } else {
                     dispFunc.DispStatus(score, requiredTiles, "Illegal column");
+                    dispFunc.DispBoard(board);
+                    continue;
                 }
 
                 if(rowChar >= '1' && rowChar - '1' < nRows) {
                     row = rowChar - '1';
                 } else {
                     dispFunc.DispStatus(score, requiredTiles, "Illegal row");
+                    dispFunc.DispBoard(board);
+                    continue;
                 }
 
                 if(buf[0] == kFlipChar) {
                     flipCard(board, row, col);
-                    score *= getScore(board, row, col);
-                    if(score == 0)
+                    int cardScore = getScore(board, row, col);
+                    if(cardScore == 0)
                         break;
+                    else if(cardScore > 1)
+                        requiredTiles -= 1;
+                    score *= cardScore;
                     dispFunc.DispStatus(score, requiredTiles, buf);
                 } else {
                     if(buf[3] < '0' || buf[3] > '3') {
