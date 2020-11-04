@@ -137,7 +137,11 @@ void cursesDispHelp(char help, char note, char flip, char quit) {
 }
 
 void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
+    move(0,0);
+    clrtoeol();
     mvprintw(0, 0, "Score: %ld", score);
+    move(1,0);
+    clrtoeol();
     mvprintw(1, 0, "Remaning required cards: %ld", nRemain);
     move(2,0);
     clrtoeol();

@@ -138,11 +138,11 @@ int main(int argc, char** argv) {
                 if(buf[0] == kFlipChar) {
                     flipCard(board, row, col);
                     int cardScore = getScore(board, row, col);
+                    score *= cardScore;
                     if(cardScore == 0)
                         break;
                     else if(cardScore > 1)
                         requiredTiles -= 1;
-                    score *= cardScore;
                     dispFunc.DispStatus(score, requiredTiles, buf);
                 } else {
                     if(buf[3] < '0' || buf[3] > '3') {

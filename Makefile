@@ -21,7 +21,7 @@ CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb
 #
 #	Main Target
 #
-main: testCursesDisp
+main: game
 
 #
 #	Multiple Targets
