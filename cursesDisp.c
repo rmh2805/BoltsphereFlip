@@ -139,10 +139,14 @@ void cursesDispHelp(char help, char note, char flip, char quit) {
 void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
     mvprintw(0, 0, "Score: %ld", score);
     mvprintw(1, 0, "Remaning required cards: %ld", nRemain);
+    move(2,0);
+    clrtoeol();
     mvprintw(2, 0, msg);
 }
 
 void cursesGetCmd(char * buf, size_t bufSize) {
+    move(screenHeight - 2, 0);
+    clrtoeol();
     mvprintw(screenHeight-2, 0, "Inupt: ");
     getnstr(buf, bufSize);
 }

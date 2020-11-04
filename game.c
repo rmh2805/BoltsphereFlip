@@ -4,6 +4,7 @@
 #include <time.h>   //time()
 #include <string.h>
 
+#include "cursesDisp.h"
 #include "printDisp.h"
 #include "board.h"
 
@@ -61,12 +62,12 @@ int main() {
     
     // Set the display functions (here's where swapping will occur)
     DispFunc dispFunc;
-    dispFunc.InitDisp = printDispInit;
-    dispFunc.CloseDisp = printDispClose;
-    dispFunc.DispHelp = printDispHelp;
-    dispFunc.DispStatus = printDispStatus;
-    dispFunc.DispBoard = printDispBoard;
-    dispFunc.GetCmd = printGetCmd;
+    dispFunc.InitDisp = cursesDispInit;
+    dispFunc.CloseDisp = cursesDispClose;
+    dispFunc.DispHelp = cursesDispHelp;
+    dispFunc.DispStatus = cursesDispStatus;
+    dispFunc.DispBoard = cursesDispBoard;
+    dispFunc.GetCmd = cursesGetCmd;
 
     //Try to initialize the display, exit on failure
     if(dispFunc.InitDisp(board) != EXIT_SUCCESS) {
@@ -156,6 +157,7 @@ int main() {
     revealBoard(board);
     dispFunc.DispStatus(score, requiredTiles, "GAME OVER");
     dispFunc.DispBoard(board);
+    dispFunc.GetCmd(buf, kBufSize);
 
     //=========================================<Cleanup>==========================================//
     dispFunc.CloseDisp();

@@ -41,7 +41,7 @@ testPrintDisp: testPrintDisp.o board.o printDisp.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
 	$(ECHO)
 
-game: game.o board.o printDisp.o
+game: game.o board.o printDisp.o cursesDisp.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
 	$(ECHO)
 
