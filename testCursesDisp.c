@@ -34,12 +34,15 @@ int main() {
 
     //========================================<Main Code>=========================================//
     cursesDispBoard(board);
-    mvgetch(0, 0);
+    
+    char buf[1024];
+    cursesGetCmd(buf, 1024);
     
     cursesDispHelp('?', '#', '!', '`');
     
     revealBoard(board);
     cursesDispBoard(board);
+    cursesDispStatus(1, 2, buf);
     mvgetch(0, 0);
 
     //=========================================<Cleanup>==========================================//

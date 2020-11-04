@@ -63,7 +63,7 @@ int cursesDispInit(board_t board) {
     size_t boardRows = getNRows(board);
     size_t boardCols = getNCols(board);
     
-    if((boardRows + 2) * kCardHeight + boardRows - 1 > screenHeight ||
+    if((boardRows + 2) * kCardHeight + boardRows + 5 > screenHeight ||
             (boardCols + 2) * kCardWidth + boardCols - 1 > screenWidth) {
         endwin();
         printf("Error: Console window too small\n");
@@ -137,11 +137,14 @@ void cursesDispHelp(char help, char note, char flip, char quit) {
 }
 
 void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
-
+    mvprintw(0, 0, "Score: %ld", score);
+    mvprintw(1, 0, "Remaning required cards: %ld", nRemain);
+    mvprintw(2, 0, msg);
 }
 
 void cursesGetCmd(char * buf, size_t bufSize) {
-
+    mvprintw(screenHeight-2, 0, "Inupt: ");
+    getnstr(buf, bufSize);
 }
 
 //=======================================<Helper Functions>=======================================//
