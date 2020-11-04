@@ -177,7 +177,17 @@ void cursesDispBoard(board_t board) {
     for(size_t row = 0; row < boardRows; row++) {
         for(size_t col = 0; col < boardCols; col++) {
             cDispCell(board, row, col);
+            mvaddch(getCardRow(row, boardRows) - 1, getCardCol(col, boardCols) + kCardWidth/2, '|');
+            mvaddch(getCardRow(row, boardRows) + kCardHeight/2, getCardCol(col, boardCols) - 1, '-');
+            refresh();
         }
+        mvaddch(getCardRow(row, boardRows) + kCardHeight/2, getCardCol(boardCols, boardCols) - 1, '-');
+        cDispRowIndics(board, row);
+    }
+    
+    for(size_t col = 0; col < boardCols; col++) {
+        mvaddch(getCardRow(boardRows, boardRows) - 1, getCardCol(col, boardCols) + kCardWidth/2, '|');
+        cDispColIndics(board, col);
     }
 
     refresh();
