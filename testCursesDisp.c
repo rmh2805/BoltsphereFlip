@@ -21,8 +21,24 @@ int main() {
 
     srand((unsigned int) time(NULL));   //Initialize rng for board
     randInit(board);    //Initialize the board with random scores
+    
+    addNote(board, 0, 0, 0);
+    addNote(board, 1, 0, 1);
+    addNote(board, 2, 0, 2);
+    addNote(board, 3, 0, 3);
+    addNote(board, 1, 0, 4);
+    addNote(board, 2, 0, 4);
+    
+    flipCard(board, 1, 0);
+    flipCard(board, 1, 1);
 
     //========================================<Main Code>=========================================//
+    cursesDispBoard(board);
+    mvgetch(0, 0);
+    
+    revealBoard(board);
+    cursesDispBoard(board);
+    mvgetch(0, 0);
 
     //=========================================<Cleanup>==========================================//
     delBoard(board);
