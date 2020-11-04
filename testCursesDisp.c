@@ -36,6 +36,8 @@ int main() {
     cursesDispBoard(board);
     mvgetch(0, 0);
     
+    cursesDispHelp('?', '#', '!', '`');
+    
     revealBoard(board);
     cursesDispBoard(board);
     mvgetch(0, 0);

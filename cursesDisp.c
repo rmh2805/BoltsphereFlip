@@ -123,7 +123,17 @@ void cursesDispBoard(board_t board) {
 }
 
 void cursesDispHelp(char help, char note, char flip, char quit) {
-
+    size_t cRow = getCardRow(0, 1) + kCardHeight/2;
+    size_t cCol = getCardCol(0, 1) + kCardWidth/2;
+    
+    erase();
+    mvprintw(cRow-2, cCol-18, "%c: Print this menu", help);
+    mvprintw(cRow-1, cCol-18, "%c: Quit the game", quit);
+    mvprintw(cRow+0, cCol-18, "%c[col][row][value(s)]: Mark the specified card", note);
+    mvprintw(cRow+1, cCol-18, "%c[col][row]: Flip the specified card", flip);
+    mvgetch(0, 0);
+    erase();
+    
 }
 
 void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
