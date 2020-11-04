@@ -15,6 +15,8 @@
 #define kFlipChar '!'
 #define kQuitChar '~'
 
+#define kPrintModeArg "-p"
+
 typedef struct dispFunc_s {
     int (* InitDisp)(board_t board);
     void (*CloseDisp)();
@@ -26,7 +28,7 @@ typedef struct dispFunc_s {
     void (* GetCmd)(char * buf, size_t bufSize);
 } DispFunc;
 
-int main() {
+int main(int argc, char** argv) {
     //======================================<Initialization>======================================//
     //===================================<Heap Allocation>====================================//
     board_t board = makeBoardDef();
@@ -62,13 +64,22 @@ int main() {
     
     // Set the display functions (here's where swapping will occur)
     DispFunc dispFunc;
-    dispFunc.InitDisp = cursesDispInit;
-    dispFunc.CloseDisp = cursesDispClose;
-    dispFunc.DispHelp = cursesDispHelp;
-    dispFunc.DispStatus = cursesDispStatus;
-    dispFunc.DispBoard = cursesDispBoard;
-    dispFunc.GetCmd = cursesGetCmd;
-
+    
+    if(argc >= 2 && strcmp(kPrintModeArg, argv[1]) == 0) {
+        dispFunc.InitDisp = printDispInit;
+        dispFunc.CloseDisp = printDispClose;
+        dispFunc.DispHelp = printDispHelp;
+        dispFunc.DispStatus = printDispStatus;
+        dispFunc.DispBoard = printDispBoard;
+        dispFunc.GetCmd = printGetCmd;
+    } else {
+        dispFunc.InitDisp = cursesDispInit;
+        dispFunc.CloseDisp = cursesDispClose;
+        dispFunc.DispHelp = cursesDispHelp;
+        dispFunc.DispStatus = cursesDispStatus;
+        dispFunc.DispBoard = cursesDispBoard;
+        dispFunc.GetCmd = cursesGetCmd;
+    }
     //Try to initialize the display, exit on failure
     if(dispFunc.InitDisp(board) != EXIT_SUCCESS) {
         delBoard(board);
