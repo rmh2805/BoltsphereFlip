@@ -1,7 +1,7 @@
 #include "cursesDisp.h"
 
 //======================================<Display Constants>=======================================//
-#define kCardWidth 5
+#define kCardWidth 7
 #define kCardHeight 5
 
 static size_t screenWidth = 0;
@@ -170,13 +170,13 @@ void cDispFrame(size_t screenRow, size_t screenCol) {
 
 void cDispRowIndics(board_t board, size_t row) {
     //Calculate the information for this row
-    size_t totScore = 0;
+    int totScore = 0;
     size_t nBombs = 0;
     
     size_t nCols = getNCols(board);
 
     for(size_t col = 0; col < nCols; col++) {
-        size_t score = getScore(board, row, col);
+        int score = getScore(board, row, col);
         totScore += score;
         if(score == 0) ++nBombs;
     }
@@ -194,13 +194,45 @@ void cDispRowIndics(board_t board, size_t row) {
 
     //Print the row number in the left indicator
     mvaddch(screenRow + kCardHeight/2, lCol + kCardWidth/2, '0' + row + 1);
+    
+    //Print the row score and bomb count in the right indicator
+    mvprintw(screenRow + kCardHeight/3, rCol + kCardWidth/2, "%d", totScore);
+    mvprintw(screenRow + kCardHeight*2/3, rCol + kCardWidth/2, "%ld", nBombs);
 
     refresh();
     wattroff(stdscr, COLOR_PAIR(kIndicatorPalette));
 }
 
 void cDispColIndics(board_t board, size_t col) {
+    int totScore = 0;
+    size_t nBombs = 0;
 
+    size_t nRows = getNRows(board);
+    for(size_t row = 0; row < nRows; row++) {
+        int score = getScore(board, row, col);
+        totScore += score;
+        if(score == 0) ++nBombs;
+    }
+
+    //Screen space calculations
+    size_t tRow = getCardRow(0, nRows) - kCardHeight - 1;
+    size_t bRow = getCardRow(nRows, nRows);
+    size_t screenCol = getCardCol(col, getNCols(board));
+
+    //Update the display
+    wattron(stdscr, COLOR_PAIR(kIndicatorPalette));
+    
+    cDispFrame(tRow, screenCol);
+    cDispFrame(bRow, screenCol);
+
+    mvaddch(tRow + kCardHeight/2, screenCol + kCardWidth/2, 'A' + col);
+    
+    mvprintw(bRow + kCardHeight/3, screenCol + kCardWidth/2, "%d", totScore);
+    mvprintw(bRow + kCardHeight*2/3, screenCol + kCardWidth/2, "%ld", nBombs);
+
+
+    refresh();
+    wattroff(stdscr, COLOR_PAIR(kIndicatorPalette));
 }
 
 void cDispCell(board_t board, size_t row, size_t col) {
