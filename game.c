@@ -15,7 +15,7 @@
 #define kQuitChar '~'
 
 typedef struct dispFunc_s {
-    int (* InitDisp)();
+    int (* InitDisp)(board_t board);
     void (*CloseDisp)();
 
     void (* DispHelp)(char help, char note, char flip, char quit);
@@ -69,7 +69,7 @@ int main() {
     dispFunc.GetCmd = printGetCmd;
 
     //Try to initialize the display, exit on failure
-    if(dispFunc.InitDisp() != EXIT_SUCCESS) {
+    if(dispFunc.InitDisp(board) != EXIT_SUCCESS) {
         delBoard(board);
         free(buf);
         fprintf(stderr, "Failed to initialize the display, exit failure\n");

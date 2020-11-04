@@ -13,7 +13,7 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    if(cursesDispInit() != EXIT_SUCCESS) {
+    if(cursesDispInit(board) != EXIT_SUCCESS) {
         delBoard(board);
         fprintf(stderr, "Failed to initialize the curses display, exit failure\n");
         return EXIT_FAILURE;

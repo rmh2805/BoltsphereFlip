@@ -21,7 +21,7 @@
 #define kRIndicator "|%2d"
 #define kRBlank "|  "
 
-int printDispInit() {
+int printDispInit(board_t board) {
     return EXIT_SUCCESS;
 }
 

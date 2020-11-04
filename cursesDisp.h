@@ -10,7 +10,7 @@
 /**
  * Provided for parity with other display code, always returns success
  */
-int cursesDispInit();
+int cursesDispInit(board_t board);
 
 /**
  * Provided for parity with other display code

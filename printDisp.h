@@ -9,7 +9,7 @@
 /**
  * Provided for parity with other display code, always returns success
  */
-int printDispInit();
+int printDispInit(board_t board);
 
 /**
  * Provided for parity with other display code

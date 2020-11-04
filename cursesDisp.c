@@ -1,12 +1,18 @@
 #include "cursesDisp.h"
 
-#define kMaxBoardDim 5
-
+//======================================<Display Constants>=======================================//
 #define kCardWidth 5
 #define kCardHeight 5
 
-size_t screenWidth = 0;
-size_t screenHeight = 0;
+static size_t screenWidth = 0;
+static size_t screenHeight = 0;
+
+//======================================<Palette Constants>======================================//
+#define kBasePalette 0
+#define kIndicatorPalette 1
+#define kUnflippedPalette 2
+#define kFlippedPalette 3
+#define kBombPalette 4
 
 //===========================================<Helpers>============================================//
 /**
@@ -46,16 +52,60 @@ size_t getCardRow(size_t row, size_t nRows) {
 
 
 //===========================================<Exposed>============================================//
-int cursesDispInit() {
-    return EXIT_FAILURE;    //Stub this out for now
+int cursesDispInit(board_t board) {
+    if(board == NULL) return EXIT_FAILURE;
+
+    initscr(); //start curses mode
+    
+    // Check screen size
+    getmaxyx(stdscr, screenHeight, screenWidth);
+    
+    size_t boardRows = getNRows(board);
+    size_t boardCols = getNCols(board);
+    
+    if((boardRows + 2) * kCardHeight + boardRows - 1 > screenHeight ||
+            (boardCols + 2) * kCardWidth + boardCols - 1 > screenWidth) {
+        endwin();
+        printf("Error: Console window too small\n");
+        return EXIT_FAILURE;
+    }
+
+    // Assign color palettes
+    if(!has_colors()) {
+        endwin();
+        printf("Error: Console does not support color\n");
+        return EXIT_FAILURE;
+    }
+
+    start_color();
+    init_pair(kIndicatorPalette, COLOR_BLACK, COLOR_WHITE);
+    init_pair(kUnflippedPalette, COLOR_WHITE, COLOR_BLUE);
+    init_pair(kFlippedPalette, COLOR_BLACK, COLOR_GREEN);
+    init_pair(kBombPalette, COLOR_WHITE, COLOR_RED);
+    
+    return EXIT_SUCCESS;    //Stub this out for now
 }
 
 
 void cursesDispClose() {
-
+    endwin();
 }
 
+void printCell(board_t board, size_t row, size_t col);
+void printRowIndics(board_t board, size_t row);
+void printColIndics(board_t board, size_t col);
+
 void cursesDispBoard(board_t board) {
+    if(board == NULL || screenWidth == 0 || screenHeight == 0) return;
+    
+    size_t boardWidth = getNCols(board);
+    size_t boardHeaith = getNRows(board);
+
+    for(size_t row = 0; row < boardWidth; row++) {
+        for(size_t col = 0; col < boardHeight; col++) {
+            printCell(board, row, col);
+        }
+    }
 
 }
 
@@ -70,3 +120,17 @@ void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
 void cursesGetCmd(char * buf, size_t bufSize) {
 
 }
+
+//=======================================<Helper Functions>=======================================//
+void printCell(board_t board, size_t row, size_t col) {
+    
+}
+
+void printRowIndics(board_t board, size_t row) {
+
+}
+
+void printColIndics(board_t board, size_t col) {
+
+}
+
