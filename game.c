@@ -63,8 +63,26 @@ int main(int argc, char** argv) {
                 fprintf(stderr, "You must specify a seed after %s\n", kBoardSeedArg);
                 return EXIT_FAILURE;
             }
-            if(sscanf(argv[i], "%ud", &seed) == -1) {
+            if(sscanf(argv[i], "%u", &seed) == 0) {
                 fprintf(stderr, "You must specify an unsigned int seed after %s\n", kBoardSeedArg);
+                return EXIT_FAILURE;
+            }
+        } else if(strcmp(kBoardColsArg, argv[i]) == 0) {
+            if(++i >= argc) {
+                fprintf(stderr, "You must specify a column count after %s\n", kBoardColsArg);
+                return EXIT_FAILURE;
+            }
+            if(sscanf(argv[i], "%lu", &cols) == 0) {
+                fprintf(stderr, "You must specify an size_t number of columns after %s\n", kBoardColsArg);
+                return EXIT_FAILURE;
+            }
+        } else if(strcmp(kBoardRowsArg, argv[i]) == 0) {
+            if(++i >= argc) {
+                fprintf(stderr, "You must specify a row count after %s\n", kBoardRowsArg);
+                return EXIT_FAILURE;
+            }
+            if(sscanf(argv[i], "%lu", &rows) == 0) {
+                fprintf(stderr, "You must specify an size_t number of rows after %s\n", kBoardRowsArg);
                 return EXIT_FAILURE;
             }
         }
@@ -72,7 +90,7 @@ int main(int argc, char** argv) {
     }
     
     //===================================<Heap Allocation>====================================//
-    board_t board = makeBoardDef();
+    board_t board = makeBoard(cols, rows);
     if(board == NULL) {
         fprintf(stderr, "Failed to allocate the board, exit failure\n");
         return EXIT_FAILURE;
