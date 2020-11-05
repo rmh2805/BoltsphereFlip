@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
                 } else if (colChar >= 'A' && colChar <= 'Z' && colChar - 'A' < nCols) {
                     col = colChar - 'A';
                 } else {
-                    dispFunc.DispStatus(score, requiredTiles, "Illegal column/Unrecognized Command");
+                    dispFunc.DispStatus(score, requiredTiles, "Illegal column");
                     dispFunc.DispBoard(board);
                     continue;
                 }
