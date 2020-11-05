@@ -177,10 +177,17 @@ void printDispBoard(board_t board) {
 }
 
 void printDispHelp(char help, char note, char flip, char quit) {
+    printf("\tWelcome to Boltsphere Flip\n\n");
+    
+    printf("    The goal of the game is to flip all non-zero cards without flipping any \n");
+    printf("zeroes. The indicators at the left and bottom show row/col total score (top) and\n");
+    printf("the number of zeroes (bttom) in the row/col.\n\n");
+    
     printf("%c: Print this menu\n", help);
     printf("%c: Quit the game\n", quit);
-    printf("%c[col][row][value(s)]: Mark the specified card with the specified values (0-3)\n", note);
-    printf("%c[col][row]: Flip the specified card\n", flip);
+    printf("%c: Switch to note taking mode\n", note);
+    printf("%c: Switch to flip mode\n", flip);
+    printf("<col><row>[notes]: flip/set notes on the specified card\n");
     fgetc(stdin);
 }
 

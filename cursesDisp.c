@@ -127,14 +127,19 @@ void cursesDispHelp(char help, char note, char flip, char quit) {
     size_t cCol = getCardCol(0, 1) + kCardWidth/2;
     
     erase();
-    mvprintw(cRow-5, cCol - 6, "%c: Print this menu", help);
-    mvprintw(cRow-4, cCol - 6, "%c: Quit the game", quit);
-    mvprintw(cRow-3, cCol - 6, "%c: Switch to note taking mode", note);
-    mvprintw(cRow-2, cCol - 6, "%c: Switch to flip mode", flip);
-    mvprintw(cRow-1, cCol - 22, "<col><row>[notes]: flip/set notes on the specified card");
-    mvprintw(cRow+1, cCol - 40, "    The goal of the game is to flip all non-zero cards without flipping any ");
-    mvprintw(cRow+2, cCol - 40, "zeroes. The indicators at the left and bottom show row/col total score (top) and");
-    mvprintw(cRow+3, cCol - 40, "the number of zeroes (bttom) in the row/col.");
+    mvprintw(cRow-6, cCol-30, "+----------------------------------------------------------+");
+    mvprintw(cRow-5, cCol-30, "|                Welcome to Boltsphere Flip                |");
+    mvprintw(cRow-4, cCol-30, "+----------------------------------------------------------+");
+    
+    mvprintw(cRow-2, cCol - 40, "    The goal of the game is to flip all non-zero cards without flipping any ");
+    mvprintw(cRow-1, cCol - 40, "zeroes. The indicators at the left and bottom show row/col total score (top) and");
+    mvprintw(cRow+0, cCol - 40, "the number of zeroes (bttom) in the row/col.");
+    
+    mvprintw(cRow+2, cCol - 6, "%c: Print this menu", help);
+    mvprintw(cRow+3, cCol - 6, "%c: Quit the game", quit);
+    mvprintw(cRow+4, cCol - 6, "%c: Switch to note taking mode", note);
+    mvprintw(cRow+5, cCol - 6, "%c: Switch to flip mode", flip);
+    mvprintw(cRow+6, cCol - 22, "<col><row>[notes]: flip/set notes on the specified card");
     mvgetch(0, 0);
     erase();
     
