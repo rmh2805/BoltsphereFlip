@@ -136,8 +136,11 @@ int main(int argc, char** argv) {
                 }
 
                 if(buf[0] == kFlipChar) {
+                    if(isFlipped(board, row, col)) continue;
+                    
                     flipCard(board, row, col);
                     int cardScore = getScore(board, row, col);
+                    
                     score *= cardScore;
                     if(cardScore == 0)
                         break;
