@@ -9,6 +9,8 @@
 #include "board.h"
 
 #define kBufSize 64
+#define kDefBoardRows 5
+#define kDefBoardCols 5
 
 #define kHelpChar '?'
 #define kNoteChar '#'
@@ -16,6 +18,9 @@
 #define kQuitChar '~'
 
 #define kPrintModeArg "-p"
+#define kBoardColsArg "-c"
+#define kBoardRowsArg "-r"
+#define kBoardSeedArg "-s"
 
 typedef struct dispFunc_s {
     int (* InitDisp)(board_t board);
@@ -30,6 +35,42 @@ typedef struct dispFunc_s {
 
 int main(int argc, char** argv) {
     //======================================<Initialization>======================================//
+    //==================================<Parameter Parsing>===================================//
+    // Set the default display functions
+    DispFunc dispFunc;
+    
+    dispFunc.InitDisp = cursesDispInit;
+    dispFunc.CloseDisp = cursesDispClose;
+    dispFunc.DispHelp = cursesDispHelp;
+    dispFunc.DispStatus = cursesDispStatus;
+    dispFunc.DispBoard = cursesDispBoard;
+    dispFunc.GetCmd = cursesGetCmd;
+    
+    unsigned int seed = (unsigned int) time(NULL);
+    size_t rows = kDefBoardRows;
+    size_t cols = kDefBoardCols;
+    
+    for(int i = 1; i < argc; i++) {
+        if(strcmp(kPrintModeArg, argv[i]) == 0) {
+            dispFunc.InitDisp = printDispInit;
+            dispFunc.CloseDisp = printDispClose;
+            dispFunc.DispHelp = printDispHelp;
+            dispFunc.DispStatus = printDispStatus;
+            dispFunc.DispBoard = printDispBoard;
+            dispFunc.GetCmd = printGetCmd;
+        } else if(strcmp(kBoardSeedArg, argv[i]) == 0) {
+            if(++i >= argc) {
+                fprintf(stderr, "You must specify a seed after %s\n", kBoardSeedArg);
+                return EXIT_FAILURE;
+            }
+            if(sscanf(argv[i], "%ud", &seed) == -1) {
+                fprintf(stderr, "You must specify an unsigned int seed after %s\n", kBoardSeedArg);
+                return EXIT_FAILURE;
+            }
+        }
+        
+    }
+    
     //===================================<Heap Allocation>====================================//
     board_t board = makeBoardDef();
     if(board == NULL) {
@@ -44,7 +85,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    srand((unsigned int) time(NULL)); //Initialize RNG
+    srand(seed); //Initialize RNG
     randInit(board); // Randomly populate the board with scores
     
     //Grab the board dimensions once
@@ -64,24 +105,6 @@ int main(int argc, char** argv) {
         }
     }
     
-    // Set the display functions (here's where swapping will occur)
-    DispFunc dispFunc;
-    
-    if(argc >= 2 && strcmp(kPrintModeArg, argv[1]) == 0) {
-        dispFunc.InitDisp = printDispInit;
-        dispFunc.CloseDisp = printDispClose;
-        dispFunc.DispHelp = printDispHelp;
-        dispFunc.DispStatus = printDispStatus;
-        dispFunc.DispBoard = printDispBoard;
-        dispFunc.GetCmd = printGetCmd;
-    } else {
-        dispFunc.InitDisp = cursesDispInit;
-        dispFunc.CloseDisp = cursesDispClose;
-        dispFunc.DispHelp = cursesDispHelp;
-        dispFunc.DispStatus = cursesDispStatus;
-        dispFunc.DispBoard = cursesDispBoard;
-        dispFunc.GetCmd = cursesGetCmd;
-    }
     //Try to initialize the display, exit on failure
     if(dispFunc.InitDisp(board) != EXIT_SUCCESS) {
         delBoard(board);
