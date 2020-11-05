@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    //====================================<Initialization>====================================//
+    AID
     srand((unsigned int) time(NULL)); //Initialize RNG
     randInit(board); // Randomly populate the board with scores
     
@@ -52,7 +52,10 @@ int main(int argc, char** argv) {
     size_t nRows = getNRows(board);
     size_t nCols = getNCols(board);
     
+    //Game state storage
     size_t score = 1;   // Variable to track the score
+    bool noteMode = true;
+
 
     //Count the number of required tiles (score greater than 1)
     size_t requiredTiles = 0;
