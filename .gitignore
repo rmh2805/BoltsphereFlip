@@ -1,4 +1,5 @@
 *.o
 testBoard
 testPrintDisp
+testCursesDisp
 game

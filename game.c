@@ -4,6 +4,7 @@
 #include <time.h>   //time()
 #include <string.h>
 
+#include "cursesDisp.h"
 #include "printDisp.h"
 #include "board.h"
 
@@ -14,8 +15,10 @@
 #define kFlipChar '!'
 #define kQuitChar '~'
 
+#define kPrintModeArg "-p"
+
 typedef struct dispFunc_s {
-    int (* InitDisp)();
+    int (* InitDisp)(board_t board);
     void (*CloseDisp)();
 
     void (* DispHelp)(char help, char note, char flip, char quit);
@@ -25,7 +28,7 @@ typedef struct dispFunc_s {
     void (* GetCmd)(char * buf, size_t bufSize);
 } DispFunc;
 
-int main() {
+int main(int argc, char** argv) {
     //======================================<Initialization>======================================//
     //===================================<Heap Allocation>====================================//
     board_t board = makeBoardDef();
@@ -61,15 +64,24 @@ int main() {
     
     // Set the display functions (here's where swapping will occur)
     DispFunc dispFunc;
-    dispFunc.InitDisp = printDispInit;
-    dispFunc.CloseDisp = printDispClose;
-    dispFunc.DispHelp = printDispHelp;
-    dispFunc.DispStatus = printDispStatus;
-    dispFunc.DispBoard = printDispBoard;
-    dispFunc.GetCmd = printGetCmd;
-
+    
+    if(argc >= 2 && strcmp(kPrintModeArg, argv[1]) == 0) {
+        dispFunc.InitDisp = printDispInit;
+        dispFunc.CloseDisp = printDispClose;
+        dispFunc.DispHelp = printDispHelp;
+        dispFunc.DispStatus = printDispStatus;
+        dispFunc.DispBoard = printDispBoard;
+        dispFunc.GetCmd = printGetCmd;
+    } else {
+        dispFunc.InitDisp = cursesDispInit;
+        dispFunc.CloseDisp = cursesDispClose;
+        dispFunc.DispHelp = cursesDispHelp;
+        dispFunc.DispStatus = cursesDispStatus;
+        dispFunc.DispBoard = cursesDispBoard;
+        dispFunc.GetCmd = cursesGetCmd;
+    }
     //Try to initialize the display, exit on failure
-    if(dispFunc.InitDisp() != EXIT_SUCCESS) {
+    if(dispFunc.InitDisp(board) != EXIT_SUCCESS) {
         delBoard(board);
         free(buf);
         fprintf(stderr, "Failed to initialize the display, exit failure\n");
@@ -124,13 +136,16 @@ int main() {
                 }
 
                 if(buf[0] == kFlipChar) {
+                    if(isFlipped(board, row, col)) continue;
+                    
                     flipCard(board, row, col);
                     int cardScore = getScore(board, row, col);
+                    
+                    score *= cardScore;
                     if(cardScore == 0)
                         break;
                     else if(cardScore > 1)
                         requiredTiles -= 1;
-                    score *= cardScore;
                     dispFunc.DispStatus(score, requiredTiles, buf);
                 } else {
                     if(buf[3] < '0' || buf[3] > '3') {
@@ -156,6 +171,7 @@ int main() {
     revealBoard(board);
     dispFunc.DispStatus(score, requiredTiles, "GAME OVER");
     dispFunc.DispBoard(board);
+    dispFunc.GetCmd(buf, kBufSize);
 
     //=========================================<Cleanup>==========================================//
     dispFunc.CloseDisp();
