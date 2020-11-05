@@ -36,7 +36,7 @@ int main() {
     cursesDispBoard(board);
     
     char buf[1024];
-    cursesGetCmd(buf, 1024);
+    cursesGetCmd(true, buf, 1024);
     
     cursesDispHelp('?', '#', '!', '`');
     

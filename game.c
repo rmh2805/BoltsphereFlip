@@ -25,7 +25,7 @@ typedef struct dispFunc_s {
     void (* DispStatus)(size_t score, size_t nRemain, const char * msg);
     void (* DispBoard)(board_t board);
 
-    void (* GetCmd)(char * buf, size_t bufSize);
+    void (* GetCmd)(bool noteMode, char * buf, size_t bufSize);
 } DispFunc;
 
 int main(int argc, char** argv) {
@@ -44,7 +44,6 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    AID
     srand((unsigned int) time(NULL)); //Initialize RNG
     randInit(board); // Randomly populate the board with scores
     
@@ -102,7 +101,8 @@ int main(int argc, char** argv) {
     
     //====================================<Main Game Loop>====================================//
     while(score > 0 && requiredTiles > 0) { //Repeat until flipped a 0 or all required tiles
-        dispFunc.GetCmd(buf, kBufSize);
+        dispFunc.GetCmd(noteMode, buf, kBufSize);
+        
         switch(buf[0]){
             case kHelpChar:
                 dispFunc.DispStatus(score, requiredTiles, "");
@@ -114,18 +114,25 @@ int main(int argc, char** argv) {
                 score = 0;
                 break;
             case kNoteChar:
-            case kFlipChar: ; //semicolon here because screw C
-                char colChar = buf[1];
-                char rowChar = buf[2];
+                noteMode = true;
+                break;
+            case kFlipChar:
+                noteMode = false;
+                break;
+                
+            default: ;
+                char colChar = buf[0];
+                char rowChar = buf[1];
                 
                 size_t row = 0;
                 size_t col = 0;
+                
                 if(colChar >= 'a' && colChar <= 'z' && colChar - 'a' < nCols) {
                     col = colChar - 'a';
                 } else if (colChar >= 'A' && colChar <= 'Z' && colChar - 'A' < nCols) {
                     col = colChar - 'A';
                 } else {
-                    dispFunc.DispStatus(score, requiredTiles, "Illegal column");
+                    dispFunc.DispStatus(score, requiredTiles, "Illegal column/Unrecognized Command");
                     dispFunc.DispBoard(board);
                     continue;
                 }
@@ -137,33 +144,34 @@ int main(int argc, char** argv) {
                     dispFunc.DispBoard(board);
                     continue;
                 }
-
-                if(buf[0] == kFlipChar) {
-                    if(isFlipped(board, row, col)) continue;
+                
+                if(!noteMode) {
+                    //Selected a card to flip
                     
-                    flipCard(board, row, col);
-                    int cardScore = getScore(board, row, col);
+                    if(isFlipped(board, row, col)) continue; //ignore this if the card has been flipped
                     
+                    flipCard(board, row, col); //flip the card
+                    int cardScore = getScore(board, row, col); //grab the card's score
+                    
+                    //Game state updates
                     score *= cardScore;
                     if(cardScore == 0)
                         break;
                     else if(cardScore > 1)
                         requiredTiles -= 1;
-                    dispFunc.DispStatus(score, requiredTiles, buf);
+                    
                 } else {
-                    if(buf[3] < '0' || buf[3] > '3') {
+                    if(buf[2] < '0' || buf[2] > '3') {
                         dispFunc.DispStatus(score, requiredTiles, "You must specify a list of notes to toggle");
                     } else {
-                        for(size_t i = 3; buf[i] >= '0' && buf[i] <= '3'; i++) { //Flip each listed flag it's listed
+                        for(size_t i = 2; buf[i] >= '0' && buf[i] <= '3'; i++) { //Flip each listed flag it's listed
                             addNote(board, buf[i] - '0', row, col);
                         }
-                        dispFunc.DispStatus(score, requiredTiles, buf);
                     }
                 }
-
-                break;
-            default:
-                dispFunc.DispStatus(score, requiredTiles, "Illegal command");
+                
+                
+                dispFunc.DispStatus(score, requiredTiles, buf);
                 break;
         }
         
@@ -174,7 +182,7 @@ int main(int argc, char** argv) {
     revealBoard(board);
     dispFunc.DispStatus(score, requiredTiles, "GAME OVER");
     dispFunc.DispBoard(board);
-    dispFunc.GetCmd(buf, kBufSize);
+    dispFunc.GetCmd(noteMode, buf, kBufSize);
 
     //=========================================<Cleanup>==========================================//
     dispFunc.CloseDisp();

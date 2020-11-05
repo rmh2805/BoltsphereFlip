@@ -148,10 +148,10 @@ void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
     mvprintw(2, 0, msg);
 }
 
-void cursesGetCmd(char * buf, size_t bufSize) {
+void cursesGetCmd(bool noteMode, char * buf, size_t bufSize) {
     move(screenHeight - 2, 0);
     clrtoeol();
-    mvprintw(screenHeight-2, 0, "Inupt: ");
+    mvprintw(screenHeight-2, 0, "%s: ", (noteMode) ? "note mode" : "flip mode");
     getnstr(buf, bufSize);
 }
 

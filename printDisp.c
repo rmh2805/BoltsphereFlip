@@ -192,7 +192,7 @@ void printDispStatus(size_t score, size_t nRemain, const char * msg) {
     printf("\n");
 }
 
-void printGetCmd(char * buf, size_t bufSize) {
-    printf("\nEnter your command: ");
+void printGetCmd(bool noteMode, char * buf, size_t bufSize) {
+    printf("\n%s: ", (noteMode) ? "note mode" : "flip mode");
     fgets(buf, bufSize, stdin);
 }
