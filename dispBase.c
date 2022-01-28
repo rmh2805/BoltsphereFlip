@@ -58,8 +58,7 @@ void rmDispBuf(dispBuf_t buf) {
 void addChar(dispBuf_t* buf, size_t row, size_t col, char ch, short palette) {
     if(buf == NULL || row >= buf->screenRows || col >= buf->screenCols || buf->data == NULL) return;
 
-    // Check that this is a valid character (between space (0x20) and ~ (0x7E))
-    if(ch < 0x20 || ch > 0x7E) return;
+    if(charPrintable(ch)) return;
 
     buf->data[row][col].ch = ch;
     buf->data[row][col].palette = palette;
@@ -85,10 +84,14 @@ void fillArea(dispBuf_t* buf, size_t row, size_t col, size_t width,
                 size_t height, char ch, short palette) {
     if(buf == NULL || buf->data == NULL) return;
 
-    for(size_t dRow = 0; row + dRow < buf->screenRows; ++dRow) {
-        for(size_t dCol = 0; col + dCol < buf->screenCols; ++dCol) {
+    for(size_t dRow = 0; row + dRow < buf->screenRows && dRow < height; ++dRow) {
+        for(size_t dCol = 0; col + dCol < buf->screenCols && dCol < width; ++dCol) {
             buf->data[row][col].ch = ch;
             buf->data[row][col].palette = palette;
         }
     }
+}
+
+bool charPrintable(char ch) {
+    return ch >= 0x20 && ch <= 0x7E;
 }

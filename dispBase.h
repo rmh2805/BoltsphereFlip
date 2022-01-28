@@ -218,4 +218,12 @@ void clearBuf(dispBuf_t* buf);
 void fillArea(dispBuf_t* buf, size_t row, size_t col, size_t width, 
                 size_t height, char ch, short palette);
 
+/**
+ * @brief Returns true iff the character can be added to the buffer for display
+ * 
+ * @param ch The character to check
+ * @return true iff the character can be added to the buffer for display
+ */
+bool charPrintable(char ch);
+
 #endif
