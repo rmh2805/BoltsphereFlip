@@ -46,7 +46,7 @@ typedef struct dispBuf_s {
 typedef struct disp_s {
     //========================<Display Open/Close>========================//
     /**
-     * Initialize the display (and allocate its internal data)
+     * @brief Initialize the display (and allocate its internal data)
      * 
      * Usage: disp.init(&disp.data);
      * 
@@ -57,7 +57,7 @@ typedef struct disp_s {
     int (* init)(void** data);
 
     /**
-     * Close the display (and free its internal data)
+     * @brief Close the display (and free its internal data)
      * 
      * Usage: disp.close(disp.data);
      * 
@@ -69,7 +69,7 @@ typedef struct disp_s {
 
     //==============================<Output>==============================//
     /**
-     * Simply prints text to the screen at the specified coordinates 
+     * @brief Simply prints text to the screen at the specified coordinates 
      * (no buffering, direct print)
      * 
      * Usage: disp.printText(disp.data, str, palette, row, col);
@@ -83,7 +83,7 @@ typedef struct disp_s {
     void (* printText)(void * data, const char * str, short palette, size_t row, size_t col);
 
     /**
-     * Prints the passed buffer out to the screen
+     * @brief Prints the passed buffer out to the screen
      * 
      * Usage: disp.printBuf(disp.data, buf);
      * 
@@ -95,7 +95,7 @@ typedef struct disp_s {
     int (* printBuf)(void * data, dispBuf_t buf);
 
     /**
-     * Clears the current screen
+     * @brief Clears the current screen
      * 
      * Usage: disp.clrScr(disp.data);
      * 
@@ -105,7 +105,7 @@ typedef struct disp_s {
 
     //==============================<Input>===============================//
     /**
-     * Gets the next input from the display
+     * @brief Gets the next input from the display
      * 
      * Usage: disp.getCh(disp.data);
      * 
@@ -116,7 +116,7 @@ typedef struct disp_s {
     int (* getCh)(void* data);
 
     /**
-     * Reads the next string to end of line or buffer, whichever comes first
+     * @brief Reads the next string to end of line or buffer, whichever comes first
      * 
      * Usage: disp.getCh(disp.data, buf, nBuf);
      * 
@@ -130,7 +130,7 @@ typedef struct disp_s {
 
     //=============================<Getters>==============================//
     /**
-     * Used to get the current screen size
+     * @brief Used to get the current screen size
      * 
      * Usage: disp.getStrSize(disp.data, &rows, &cols);
      * 
@@ -148,14 +148,14 @@ typedef struct disp_s {
 //===========================<Function Definitions>===========================//
 //=============================<Type Builders>==============================//
 /**
- * Creates a display struct with all NULL function/data pointers
+ * @brief Creates a display struct with all NULL function/data pointers
  * 
  * @return A display struct with all NULL function/data pointers
  */
 disp_t mkNullDisp();
 
 /**
- * Creates a display buffer data struct
+ * @brief Creates a display buffer data struct
  * 
  * @param nRows The number of rows for the buffer
  * @param nCols The number of columns for the buffer
@@ -166,7 +166,7 @@ disp_t mkNullDisp();
 dispBuf_t mkDispBuf(size_t nRows, size_t nCols);
 
 /**
- * Frees all allocated data for the given display buf
+ * @brief Frees all allocated data for the given display buf
  * 
  * @param buf The display buffer to free
  */
@@ -174,7 +174,7 @@ void rmDispBuf(dispBuf_t buf);
 
 //=============================<Buffer Control>=============================//
 /**
- * Adds a character with the specified palette to the buffer
+ * @brief Adds a character with the specified palette to the buffer
  * 
  * @param buf The display buffer to modify
  * @param row The row to add the character to
@@ -185,7 +185,7 @@ void rmDispBuf(dispBuf_t buf);
 void addChar(dispBuf_t* buf, size_t row, size_t col, char ch, short palette);
 
 /**
- * Adds a string with the specified palette to the buffer
+ * @brief Adds a string with the specified palette to the buffer
  * 
  * @param buf The display buffer to modify
  * @param row The row to start the string in
@@ -196,10 +196,24 @@ void addChar(dispBuf_t* buf, size_t row, size_t col, char ch, short palette);
 void addStr(dispBuf_t* buf, size_t row, size_t col, const char * str, short palette);
 
 /**
- * Clears the provided buffer
+ * @brief Clears the provided buffer
  * 
  * @param buf The display buffer to clear
  */
 void clearBuf(dispBuf_t* buf);
+
+/**
+ * @brief Fills a given area of the buffer with the specified character and palette
+ * 
+ * @param buf The buffer to modify
+ * @param row The top row of the region to fill
+ * @param col The left column of the region to fill
+ * @param width The width of the region to fill
+ * @param height The height of the region to fill
+ * @param ch The character to fill the region with
+ * @param palette The palette to fill the region with
+ */
+void fillArea(dispBuf_t* buf, size_t row, size_t col, size_t width, 
+                size_t height, char ch, short palette);
 
 #endif
