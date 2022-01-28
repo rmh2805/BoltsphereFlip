@@ -58,7 +58,7 @@ void rmDispBuf(dispBuf_t buf) {
 void addChar(dispBuf_t* buf, size_t row, size_t col, char ch, short palette) {
     if(buf == NULL || row >= buf->screenRows || col >= buf->screenCols || buf->data == NULL) return;
 
-    if(charPrintable(ch)) return;
+    if(!charPrintable(ch)) return;
 
     buf->data[row][col].ch = ch;
     buf->data[row][col].palette = palette;
@@ -79,15 +79,15 @@ void clearBuf(dispBuf_t* buf) {
     fillArea(buf, 0, 0, buf->screenCols, buf->screenRows, ' ', kNoPalette);
 }
 
-
 void fillArea(dispBuf_t* buf, size_t row, size_t col, size_t width, 
                 size_t height, char ch, short palette) {
     if(buf == NULL || buf->data == NULL) return;
+    if(!charPrintable(ch)) return;
 
     for(size_t dRow = 0; row + dRow < buf->screenRows && dRow < height; ++dRow) {
         for(size_t dCol = 0; col + dCol < buf->screenCols && dCol < width; ++dCol) {
-            buf->data[row][col].ch = ch;
-            buf->data[row][col].palette = palette;
+            buf->data[row+dRow][col+dCol].ch = ch;
+            buf->data[row+dRow][col+dCol].palette = palette;
         }
     }
 }

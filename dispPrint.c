@@ -57,7 +57,8 @@ int print_printBuf (void * data, dispBuf_t buf){
 
     for(size_t row = 0; row < buf.screenRows; ++row) {
         for(size_t col = 0; col < buf.screenCols; ++col) {
-            printf("%c", buf.data[row][col].ch);
+            char ch = buf.data[row][col].ch;
+            printf("%c", (charPrintable(ch)) ? ch : ' ');
         }
         printf("\n");
     }

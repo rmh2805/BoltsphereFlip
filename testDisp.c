@@ -57,6 +57,23 @@ int main() {
     disp.printText(disp.data, "Press Enter to Continue", kDefPalette, scrRows-1, 0);
     disp.getStr(disp.data, inBuf, kBufSize);
 
+    disp.clearScr(disp.data);
+
+    // Test Buffered IO
+    disp.printText(disp.data, "===<Buffer Tests 1>===", kDefPalette, 0, 0);
+    addStr(&buf, 0, 0, "Buffered Tests (1/3): addStr and addChar", kDefPalette);
+    addChar(&buf, 1, 1, '#', kWhitePalette);
+    disp.printBuf(disp.data, buf);
+
+    disp.getStr(disp.data, inBuf, kBufSize);
+
+    clearBuf(&buf);
+    disp.printText(disp.data, "===<Buffer Tests 2>===", kDefPalette, 0, 0);
+    addStr(&buf, 2, 0, "Buffered Tests (2/3): clearBuf", kDefPalette);
+    disp.printBuf(disp.data, buf);
+
+    disp.getStr(disp.data, inBuf, kBufSize);
+
     //===========================<Cleanup and Exit>===========================//
     status = EXIT_SUCCESS;
 testDisp_fail:
