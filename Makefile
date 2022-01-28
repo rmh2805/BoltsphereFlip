@@ -14,7 +14,8 @@ ECHO=@echo
 
 # C Flags
 CLIBS=-lm -lncurses
-CFLAGS=-Wall -std=c99 -Wextra -pedantic -ggdb
+CFLAGS=-Wall -std=c99 -Wextra -pedantic
+CDEBUGFLAGS=-ggdb
 
 # Misc
 
@@ -44,6 +45,7 @@ testPrintDisp: testPrintDisp.o board.o printDisp.o
 game: game.o board.o printDisp.o cursesDisp.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
 	$(ECHO)
+	
 
 testCursesDisp: testCursesDisp.o board.o cursesDisp.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)

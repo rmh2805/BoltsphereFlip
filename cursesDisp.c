@@ -127,10 +127,19 @@ void cursesDispHelp(char help, char note, char flip, char quit) {
     size_t cCol = getCardCol(0, 1) + kCardWidth/2;
     
     erase();
-    mvprintw(cRow-2, cCol-18, "%c: Print this menu", help);
-    mvprintw(cRow-1, cCol-18, "%c: Quit the game", quit);
-    mvprintw(cRow+0, cCol-18, "%c[col][row][value(s)]: Mark the specified card", note);
-    mvprintw(cRow+1, cCol-18, "%c[col][row]: Flip the specified card", flip);
+    mvprintw(cRow-6, cCol-30, "+----------------------------------------------------------+");
+    mvprintw(cRow-5, cCol-30, "|                Welcome to Boltsphere Flip                |");
+    mvprintw(cRow-4, cCol-30, "+----------------------------------------------------------+");
+    
+    mvprintw(cRow-2, cCol - 40, "    The goal of the game is to flip all non-zero cards without flipping any ");
+    mvprintw(cRow-1, cCol - 40, "zeroes. The indicators at the left and bottom show row/col total score (top) and");
+    mvprintw(cRow+0, cCol - 40, "the number of zeroes (bttom) in the row/col.");
+    
+    mvprintw(cRow+2, cCol - 6, "%c: Print this menu", help);
+    mvprintw(cRow+3, cCol - 6, "%c: Quit the game", quit);
+    mvprintw(cRow+4, cCol - 6, "%c: Switch to note taking mode", note);
+    mvprintw(cRow+5, cCol - 6, "%c: Switch to flip mode", flip);
+    mvprintw(cRow+6, cCol - 22, "<col><row>[notes]: flip/set notes on the specified card");
     mvgetch(0, 0);
     erase();
     
@@ -148,10 +157,10 @@ void cursesDispStatus(size_t score, size_t nRemain, const char * msg) {
     mvprintw(2, 0, msg);
 }
 
-void cursesGetCmd(char * buf, size_t bufSize) {
+void cursesGetCmd(bool noteMode, char * buf, size_t bufSize) {
     move(screenHeight - 2, 0);
     clrtoeol();
-    mvprintw(screenHeight-2, 0, "Inupt: ");
+    mvprintw(screenHeight-2, 0, "%s: ", (noteMode) ? "note mode" : "flip mode");
     getnstr(buf, bufSize);
 }
 

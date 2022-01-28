@@ -35,6 +35,6 @@ void cursesDispStatus(size_t score, size_t nRemain, const char * msg);
 /**
  * Gets a command from stdin, puts it into buf
  */
-void cursesGetCmd(char * buf, size_t bufSize);
+void cursesGetCmd(bool noteMode, char * buf, size_t bufSize);
 
 #endif //_CURSES_DISP_H_

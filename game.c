@@ -9,6 +9,8 @@
 #include "board.h"
 
 #define kBufSize 64
+#define kDefBoardRows 5
+#define kDefBoardCols 5
 
 #define kHelpChar '?'
 #define kNoteChar '#'
@@ -16,6 +18,9 @@
 #define kQuitChar '~'
 
 #define kPrintModeArg "-p"
+#define kBoardColsArg "-c"
+#define kBoardRowsArg "-r"
+#define kBoardSeedArg "-s"
 
 typedef struct dispFunc_s {
     int (* InitDisp)(board_t board);
@@ -25,13 +30,67 @@ typedef struct dispFunc_s {
     void (* DispStatus)(size_t score, size_t nRemain, const char * msg);
     void (* DispBoard)(board_t board);
 
-    void (* GetCmd)(char * buf, size_t bufSize);
+    void (* GetCmd)(bool noteMode, char * buf, size_t bufSize);
 } DispFunc;
 
 int main(int argc, char** argv) {
     //======================================<Initialization>======================================//
+    //==================================<Parameter Parsing>===================================//
+    // Set the default display functions
+    DispFunc dispFunc;
+    
+    dispFunc.InitDisp = cursesDispInit;
+    dispFunc.CloseDisp = cursesDispClose;
+    dispFunc.DispHelp = cursesDispHelp;
+    dispFunc.DispStatus = cursesDispStatus;
+    dispFunc.DispBoard = cursesDispBoard;
+    dispFunc.GetCmd = cursesGetCmd;
+    
+    unsigned int seed = (unsigned int) time(NULL);
+    size_t rows = kDefBoardRows;
+    size_t cols = kDefBoardCols;
+    
+    for(int i = 1; i < argc; i++) {
+        if(strcmp(kPrintModeArg, argv[i]) == 0) {
+            dispFunc.InitDisp = printDispInit;
+            dispFunc.CloseDisp = printDispClose;
+            dispFunc.DispHelp = printDispHelp;
+            dispFunc.DispStatus = printDispStatus;
+            dispFunc.DispBoard = printDispBoard;
+            dispFunc.GetCmd = printGetCmd;
+        } else if(strcmp(kBoardSeedArg, argv[i]) == 0) {
+            if(++i >= argc) {
+                fprintf(stderr, "You must specify a seed after %s\n", kBoardSeedArg);
+                return EXIT_FAILURE;
+            }
+            if(sscanf(argv[i], "%u", &seed) == 0) {
+                fprintf(stderr, "You must specify an unsigned int seed after %s\n", kBoardSeedArg);
+                return EXIT_FAILURE;
+            }
+        } else if(strcmp(kBoardColsArg, argv[i]) == 0) {
+            if(++i >= argc) {
+                fprintf(stderr, "You must specify a column count after %s\n", kBoardColsArg);
+                return EXIT_FAILURE;
+            }
+            if(sscanf(argv[i], "%lu", &cols) == 0) {
+                fprintf(stderr, "You must specify an size_t number of columns after %s\n", kBoardColsArg);
+                return EXIT_FAILURE;
+            }
+        } else if(strcmp(kBoardRowsArg, argv[i]) == 0) {
+            if(++i >= argc) {
+                fprintf(stderr, "You must specify a row count after %s\n", kBoardRowsArg);
+                return EXIT_FAILURE;
+            }
+            if(sscanf(argv[i], "%lu", &rows) == 0) {
+                fprintf(stderr, "You must specify an size_t number of rows after %s\n", kBoardRowsArg);
+                return EXIT_FAILURE;
+            }
+        }
+        
+    }
+    
     //===================================<Heap Allocation>====================================//
-    board_t board = makeBoardDef();
+    board_t board = makeBoard(cols, rows);
     if(board == NULL) {
         fprintf(stderr, "Failed to allocate the board, exit failure\n");
         return EXIT_FAILURE;
@@ -44,15 +103,17 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    //====================================<Initialization>====================================//
-    srand((unsigned int) time(NULL)); //Initialize RNG
+    srand(seed); //Initialize RNG
     randInit(board); // Randomly populate the board with scores
     
     //Grab the board dimensions once
     size_t nRows = getNRows(board);
     size_t nCols = getNCols(board);
     
+    //Game state storage
     size_t score = 1;   // Variable to track the score
+    bool noteMode = true;
+
 
     //Count the number of required tiles (score greater than 1)
     size_t requiredTiles = 0;
@@ -62,24 +123,6 @@ int main(int argc, char** argv) {
         }
     }
     
-    // Set the display functions (here's where swapping will occur)
-    DispFunc dispFunc;
-    
-    if(argc >= 2 && strcmp(kPrintModeArg, argv[1]) == 0) {
-        dispFunc.InitDisp = printDispInit;
-        dispFunc.CloseDisp = printDispClose;
-        dispFunc.DispHelp = printDispHelp;
-        dispFunc.DispStatus = printDispStatus;
-        dispFunc.DispBoard = printDispBoard;
-        dispFunc.GetCmd = printGetCmd;
-    } else {
-        dispFunc.InitDisp = cursesDispInit;
-        dispFunc.CloseDisp = cursesDispClose;
-        dispFunc.DispHelp = cursesDispHelp;
-        dispFunc.DispStatus = cursesDispStatus;
-        dispFunc.DispBoard = cursesDispBoard;
-        dispFunc.GetCmd = cursesGetCmd;
-    }
     //Try to initialize the display, exit on failure
     if(dispFunc.InitDisp(board) != EXIT_SUCCESS) {
         delBoard(board);
@@ -99,7 +142,8 @@ int main(int argc, char** argv) {
     
     //====================================<Main Game Loop>====================================//
     while(score > 0 && requiredTiles > 0) { //Repeat until flipped a 0 or all required tiles
-        dispFunc.GetCmd(buf, kBufSize);
+        dispFunc.GetCmd(noteMode, buf, kBufSize);
+        
         switch(buf[0]){
             case kHelpChar:
                 dispFunc.DispStatus(score, requiredTiles, "");
@@ -111,12 +155,19 @@ int main(int argc, char** argv) {
                 score = 0;
                 break;
             case kNoteChar:
-            case kFlipChar: ; //semicolon here because screw C
-                char colChar = buf[1];
-                char rowChar = buf[2];
+                noteMode = true;
+                break;
+            case kFlipChar:
+                noteMode = false;
+                break;
+                
+            default: ;
+                char colChar = buf[0];
+                char rowChar = buf[1];
                 
                 size_t row = 0;
                 size_t col = 0;
+                
                 if(colChar >= 'a' && colChar <= 'z' && colChar - 'a' < nCols) {
                     col = colChar - 'a';
                 } else if (colChar >= 'A' && colChar <= 'Z' && colChar - 'A' < nCols) {
@@ -134,33 +185,34 @@ int main(int argc, char** argv) {
                     dispFunc.DispBoard(board);
                     continue;
                 }
-
-                if(buf[0] == kFlipChar) {
-                    if(isFlipped(board, row, col)) continue;
+                
+                if(!noteMode) {
+                    //Selected a card to flip
                     
-                    flipCard(board, row, col);
-                    int cardScore = getScore(board, row, col);
+                    if(isFlipped(board, row, col)) continue; //ignore this if the card has been flipped
                     
+                    flipCard(board, row, col); //flip the card
+                    int cardScore = getScore(board, row, col); //grab the card's score
+                    
+                    //Game state updates
                     score *= cardScore;
                     if(cardScore == 0)
                         break;
                     else if(cardScore > 1)
                         requiredTiles -= 1;
-                    dispFunc.DispStatus(score, requiredTiles, buf);
+                    
                 } else {
-                    if(buf[3] < '0' || buf[3] > '3') {
+                    if(buf[2] < '0' || buf[2] > '3') {
                         dispFunc.DispStatus(score, requiredTiles, "You must specify a list of notes to toggle");
                     } else {
-                        for(size_t i = 3; buf[i] >= '0' && buf[i] <= '3'; i++) { //Flip each listed flag it's listed
+                        for(size_t i = 2; buf[i] >= '0' && buf[i] <= '3'; i++) { //Flip each listed flag it's listed
                             addNote(board, buf[i] - '0', row, col);
                         }
-                        dispFunc.DispStatus(score, requiredTiles, buf);
                     }
                 }
-
-                break;
-            default:
-                dispFunc.DispStatus(score, requiredTiles, "Illegal command");
+                
+                
+                dispFunc.DispStatus(score, requiredTiles, buf);
                 break;
         }
         
@@ -171,7 +223,7 @@ int main(int argc, char** argv) {
     revealBoard(board);
     dispFunc.DispStatus(score, requiredTiles, "GAME OVER");
     dispFunc.DispBoard(board);
-    dispFunc.GetCmd(buf, kBufSize);
+    dispFunc.GetCmd(noteMode, buf, kBufSize);
 
     //=========================================<Cleanup>==========================================//
     dispFunc.CloseDisp();

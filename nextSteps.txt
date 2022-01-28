@@ -1,0 +1,2 @@
+1) Update note taking to annotate a whole row/column at a time (e.g. `ax02` tags the entire `a` column with values 0 and 2)
+2) Make flip mode one use only/always be in note mode, prepending each flip command with a bang (!) mark (i.e. remove the need to enter a `#` after a flip to make notes)
