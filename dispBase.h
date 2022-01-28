@@ -126,7 +126,7 @@ typedef struct disp_s {
      * 
      * @return The read data
      */
-    int (* getStr)(void* data, char* buf, size_t nBuf);
+    void (* getStr)(void* data, char* buf, size_t nBuf);
 
     //=============================<Getters>==============================//
     /**
@@ -142,6 +142,8 @@ typedef struct disp_s {
 
     //========================<Misc Display Info>=========================//
     bool monoDisp;  /** If initialized true, display does not support color */
+
+    void* data;     /** A data store for this display */
 } disp_t;
 
 
