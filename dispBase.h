@@ -16,8 +16,7 @@
 #define kCyanPalette 8
 
 #define kDefPalette kBlackPalette
-
-// 
+#define kNoPalette 0
 
 //=============================<Type Definitions>=============================//
 //=============================<Display Buffer>=============================//
@@ -37,7 +36,7 @@ typedef struct dispBuf_s {
     size_t screenRows;
     size_t screenCols;
 
-    printPair_t** buf;
+    printPair_t** data;
 } dispBuf_t;
 
 //==============================<Display Core>==============================//
@@ -194,7 +193,7 @@ void addChar(dispBuf_t* buf, size_t row, size_t col, char ch, short palette);
  * @param str The string to add
  * @param palette The palette to display the string in
  */
-void addStr(dispBuf_t* buf, size_t row, size_t col, char ch, short palette);
+void addStr(dispBuf_t* buf, size_t row, size_t col, const char * str, short palette);
 
 /**
  * Clears the provided buffer
