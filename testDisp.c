@@ -6,8 +6,8 @@
 #include "dispPrint.h"
 #include "dispCurses.h"
 
-#define kInBufSize 64
-const disp_t(* mkDisp)() = mkPrintDisp;
+#define kBufSize 64
+disp_t(* mkDisp)() = mkPrintDisp;
 
 int main() {
     //=======================<Declare State to Cleanup>=======================//
@@ -19,12 +19,16 @@ int main() {
     dispBuf_t buf;
     bool bufInit = false;
 
-    char inBuf[kInBufSize];
+    char inBuf[kBufSize];
+    char outBuf[kBufSize];
 
     //============================<Initialization>============================//
     // Basic display
     disp = mkDisp();
-    if(disp.init(&disp.data) < 0) goto testDisp_fail;
+    if(disp.init(&disp.data) < 0) {
+        fprintf(stderr, "*FATAL ERROR*: failed to initialize the display\n");
+        goto testDisp_fail;
+    }
     dispInit = true;
 
     // Get display size for buffer init
@@ -33,12 +37,25 @@ int main() {
 
     // Display Buffer
     buf = mkDispBuf(scrRows, scrCols);
-    if(buf.data == NULL) goto testDisp_fail;
+    if(buf.data == NULL) {
+        fprintf(stderr,"*FATAL ERROR*: Failed to initialize the display buffer\n");
+        goto testDisp_fail;
+    }
     bufInit=true;
 
     //================================<Tests>=================================//
-    // Test Output
-    disp.printText(disp.data, "OUTPUT TESTS", kWhitePalette, scrRows/2, scrCols/2-6);
+    // Test Basic IO
+    disp.printText(disp.data, "Basic Tests (1/2) (printText): Can you see me?", 
+                    kWhitePalette, 0, 0);
+
+    disp.printText(disp.data, "Basic Tests (2/2) (getStr): Enter any text", 
+                    kWhitePalette, 1, 0);
+    disp.getStr(disp.data, inBuf, kBufSize);
+    disp.printText(disp.data, "Got String:", kDefPalette, 2, 0);
+    disp.printText(disp.data, inBuf, kDefPalette, 2, 12);
+
+    disp.printText(disp.data, "Press Enter to Continue", kDefPalette, scrRows-1, 0);
+    disp.getStr(disp.data, inBuf, kBufSize);
 
     //===========================<Cleanup and Exit>===========================//
     status = EXIT_SUCCESS;
