@@ -61,6 +61,7 @@ int main() {
 
     // Test Buffered IO
     disp.printText(disp.data, "===<Buffer Tests 1>===", kDefPalette, 0, 0);
+    disp.clearScr(disp.data);
     addStr(&buf, 0, 0, "Buffered Tests (1/3): addStr and addChar", kDefPalette);
     addChar(&buf, 1, 1, '#', kWhitePalette);
     disp.printBuf(disp.data, buf);
@@ -69,6 +70,7 @@ int main() {
 
     clearBuf(&buf);
     disp.printText(disp.data, "===<Buffer Tests 2>===", kDefPalette, 0, 0);
+    disp.clearScr(disp.data);
     addStr(&buf, 2, 0, "Buffered Tests (2/3): clearBuf", kDefPalette);
     disp.printBuf(disp.data, buf);
 
@@ -76,6 +78,7 @@ int main() {
 
     clearBuf(&buf);
     disp.printText(disp.data, "===<Buffer Tests 3>===", kDefPalette, 0, 0);
+    disp.clearScr(disp.data);
     fillArea(&buf, 0, 0 * (scrCols/3), scrCols/3, scrRows-6, '_', kRedPalette);
     fillArea(&buf, 0, 1 * (scrCols/3), scrCols/3, scrRows-6, '#', kGreenPalette);
     fillArea(&buf, 0, 2 * (scrCols/3), scrCols/3, scrRows-6, '@', kBluePalette);
