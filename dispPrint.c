@@ -1,4 +1,4 @@
-#include "printDisp.h"
+#include "dispPrint.h"
 
 //============================<Declare Disp Impls>============================//
 int     print_init         (void** data);
@@ -11,7 +11,7 @@ void    print_getStr       (void* data, char* buf, size_t nBuf);
 void    print_getScrSize   (void* data, size_t* rows, size_t* cols);
 
 //============================<Exposed Functions>=============================//
-disp_t mkCursesDisp() {
+disp_t mkPrintDisp() {
     disp_t disp = mkNullDisp();
 
     disp.init = print_init;
