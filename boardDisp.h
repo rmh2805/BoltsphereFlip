@@ -2,6 +2,7 @@
 #define _BOARD_DISP_H_
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "board.h"
 #include "dispBase.h"
