@@ -40,15 +40,7 @@ testDisp: testDisp.o dispBase.o dispPrint.o dispCurses.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
 	$(ECHO)
 
-testPrintDisp: testPrintDisp.o board.o printDisp.o
-	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
-	$(ECHO)
-
 game: game.o board.o printDisp.o cursesDisp.o
-	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
-	$(ECHO)
-
-testCursesDisp: testCursesDisp.o board.o cursesDisp.o
 	$(CC) $(CFLAGS) $(CDEBUGFLAGS) -o $@ $^ $(CLIBS)
 	$(ECHO)
 
