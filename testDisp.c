@@ -74,6 +74,20 @@ int main() {
 
     disp.getStr(disp.data, inBuf, kBufSize);
 
+    clearBuf(&buf);
+    disp.printText(disp.data, "===<Buffer Tests 3>===", kDefPalette, 0, 0);
+    fillArea(&buf, 0, 0 * (scrCols/3), scrCols/3, scrRows-6, '_', kRedPalette);
+    fillArea(&buf, 0, 1 * (scrCols/3), scrCols/3, scrRows-6, '#', kGreenPalette);
+    fillArea(&buf, 0, 2 * (scrCols/3), scrCols/3, scrRows-6, '@', kBluePalette);
+    fillArea(&buf, scrRows-6, 0 * scrCols/2, scrCols/2, 3, '.', kYellowPalette);
+    fillArea(&buf, scrRows-6, 1 * scrCols/2, scrCols/2, 3, ',', kMagentaPalette);
+    fillArea(&buf, scrRows-3, 0 * scrCols/2, scrCols/2, 3, '+', kCyanPalette);
+    fillArea(&buf, scrRows-3, 1 * scrCols/2, scrCols/2, 3, '!', kWhitePalette);
+    addStr(&buf, 0, 0, "Buffered Tests (3/3): fillArea", kBlackPalette);
+    disp.printBuf(disp.data, buf);
+
+    disp.getStr(disp.data, inBuf, kBufSize);
+
     //===========================<Cleanup and Exit>===========================//
     status = EXIT_SUCCESS;
 testDisp_fail:
