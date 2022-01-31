@@ -140,10 +140,21 @@ typedef struct disp_s {
      */
     void (* getScrSize)(void* data, size_t* rows, size_t* cols);
 
-    //========================<Misc Display Info>=========================//
-    bool monoDisp;  /** If initialized true, display does not support color */
+    /**
+     * @brief Used to request the screen be a certain size (optional)
+     *
+     * Usage: disp.setScrSize(disp.data, rows, cols);
+     * 
+     * @param data The display's data store
+     * @param rows The number of rows to request for the display
+     * @param cols The number of columns to request for the display
+     */
+    void (* setScrSize)(void* data, size_t rows, size_t cols);
 
-    void* data;     /** A data store for this display */
+    //========================<Misc Display Info>=========================//
+    bool monoDisp;      /** If initialized true, display does not support color */
+
+    void* data;         /** A data store for this display */
 } disp_t;
 
 

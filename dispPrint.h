@@ -8,7 +8,7 @@
 
 #include "dispBase.h"
 
-#define kDefPrintDisplyRows 50
+#define kDefPrintDisplayRows 50
 #define kDefPrintDisplayCols 80
 
 /**
