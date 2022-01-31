@@ -1,5 +1,9 @@
 #include "dispPrint.h"
 
+#ifndef min
+#define min(a,b) ((b<a) ? b : a)
+#endif
+
 //==============================<Internal Data>===============================//
 typedef struct printData_s {
     size_t scrRows;
@@ -77,11 +81,14 @@ void print_printText (void * data, const char * str, short palette, size_t row, 
 }
 
 int print_printBuf (void * data, dispBuf_t buf){
-    if(buf.data == NULL) return -1;
-    data = data;
+    if(buf.data == NULL || data == NULL) return -1;
+    printData_t* printData = (printData_t*) data;
 
-    for(size_t row = 0; row < buf.screenRows; ++row) {
-        for(size_t col = 0; col < buf.screenCols; ++col) {
+    size_t maxRow = min(buf.screenRows, printData->scrRows);
+    size_t maxCol = min(buf.screenCols, printData->scrCols);
+
+    for(size_t row = 0; row < maxRow; ++row) {
+        for(size_t col = 0; col < maxCol; ++col) {
             char ch = buf.data[row][col].ch;
             printf("%c", (charPrintable(ch)) ? ch : ' ');
         }
@@ -91,9 +98,10 @@ int print_printBuf (void * data, dispBuf_t buf){
 }
 
 void print_clearScr (void* data){
-    data = data;
+    if(data == NULL) return;
+    printData_t* printData = (printData_t*) data;
 
-    for(int i = 0; i < kDefPrintDisplayRows; ++i) {
+    for(int i = 0; i < printData->scrRows; ++i) {
         printf("\n");
     }
 }
