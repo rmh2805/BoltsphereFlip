@@ -1,7 +1,6 @@
 *.o
 .vscode
 testBoard
-testPrintDisp
-testCursesDisp
 testDisp
+testBoardDisp
 game
