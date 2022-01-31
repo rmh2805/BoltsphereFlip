@@ -28,7 +28,7 @@ void    print_clearScr      (void* data);
 int     print_getCh         (void* data);
 void    print_getStr        (void* data, char* buf, size_t nBuf);
 void    print_getScrSize    (void* data, size_t* rows, size_t* cols);
-void    print_setScrSize    (void* data, size_t rows, size_t cols);
+int    print_setScrSize    (void* data, size_t rows, size_t cols);
 
 //============================<Exposed Functions>=============================//
 disp_t mkPrintDisp() {
@@ -101,7 +101,7 @@ void print_clearScr (void* data){
     if(data == NULL) return;
     printData_t* printData = (printData_t*) data;
 
-    for(int i = 0; i < printData->scrRows; ++i) {
+    for(size_t i = 0; i < printData->scrRows; ++i) {
         printf("\n");
     }
 }
@@ -128,10 +128,12 @@ void print_getScrSize (void* data, size_t* rows, size_t* cols){
     if(cols != NULL) *cols = printData->scrCols;
 }
 
-void print_setScrSize (void* data, size_t rows, size_t cols) {
-    if(data == NULL) return;
+int print_setScrSize (void* data, size_t rows, size_t cols) {
+    if(data == NULL) return -1;
     printData_t* printData = (printData_t*) data;
 
     if(rows != 0) printData->scrRows = rows;
     if(cols != 0) printData->scrCols = cols;
+
+    return 0;
 }

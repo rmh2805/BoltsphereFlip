@@ -148,8 +148,10 @@ typedef struct disp_s {
      * @param data The display's data store
      * @param rows The number of rows to request for the display
      * @param cols The number of columns to request for the display
+     * 
+     * @return 0 on success, <0 on failure
      */
-    void (* setScrSize)(void* data, size_t rows, size_t cols);
+    int (* setScrSize)(void* data, size_t rows, size_t cols);
 
     //========================<Misc Display Info>=========================//
     bool monoDisp;      /** If initialized true, display does not support color */
